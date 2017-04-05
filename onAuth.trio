@@ -1,17 +1,19 @@
 name:onAuth
 id:@206c0e51-d45992a7 "onAuth"
 func
-mod:2017-03-27T18:58:13.378Z
+mod:2017-04-05T13:59:20.691Z
 src:
-  (uid, password: "operator") => do
+  (uid, password) => do
     uri: `ldap://localhost:1340/`
     dn: "uid=" + uid + ",ou=People,dc=activelogix,dc=com"
     attrs: ldapAuth(uri, dn, password)
-
-    echo("#" + attrs["employeeNumber"])
-    echo(attrs["employeeNumber"] == "0")
-
-    // assume any other user is an operator
-    return {}
-
+    echo(attrs)
+    employeeNumber: parseNumber(attrs["employeeNumber"])
+    if (employeeNumber == 0) do
+      return {userAdmin, equipAccessFilter: "hvac", pointAccessFilter: "heat", appAccess: "folio, settings, debug, energy", actionAccessFilter: "hvac <= 2"}
+    end else if (employeeNumber > 0) do
+      return {equipAccessFilter: "lightsGroup", appAccess: "help, energy, siteSpark"}
+    end else do
+      return {}
+    end
   end
