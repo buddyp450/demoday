@@ -1,0 +1,17 @@
+name:onAuth
+id:@206c0e51-d45992a7 "onAuth"
+func
+mod:2017-03-27T18:58:13.378Z
+src:
+  (uid, password: "operator") => do
+    uri: `ldap://localhost:1340/`
+    dn: "uid=" + uid + ",ou=People,dc=activelogix,dc=com"
+    attrs: ldapAuth(uri, dn, password)
+
+    echo("#" + attrs["employeeNumber"])
+    echo(attrs["employeeNumber"] == "0")
+
+    // assume any other user is an operator
+    return {}
+
+  end
