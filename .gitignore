@@ -1,0 +1,6 @@
+# ignore all kinds
+*
+# except trios
+!*.trio
+# and this ignore file
+!.gitignore
